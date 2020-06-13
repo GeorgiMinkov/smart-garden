@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Slider } from '@material-ui/core';
+import { Slider, Box } from '@material-ui/core';
 
 import style from '../Configuration/style.css';
 
@@ -26,8 +26,8 @@ const Form = (props) => (
     //     <button >Get Weather</button>
     // </form>
     <div>
-        <div>Change moisture</div>
-        <Slider className='slider'
+        <div>Change water based on moisture</div>
+        <Box width="50%" height="50" position="center"><Slider className='slider'
             defaultValue={30}
             aria-labelledby="discrete-slider"
             valueLabelDisplay="auto"
@@ -36,7 +36,8 @@ const Form = (props) => (
             min={10}
             max={110}
             onChangeCommitted={props.sendData}
-        />
+            height="inherit"
+        /></Box>
     </div>
 
 );

@@ -60,13 +60,25 @@ def recieveData():
 def get_data():
     print ("------------ start -----------")
     data = {
-        "moisture": "0.0"}
+        "moisture": "0.0",
+        "temperture": "0.0",
+        "humidity": "0.0",
+        "waterLevel": "45"}
     sendData('1')
     
     recieve = recieveData()
-    print("check ata ")
+    print("check data ")
     print (recieve)
-    data["moisture"] = recieve
+    
+    splitData = recieve.split()
+    moisture = splitData[0]
+    temperture = splitData[1]
+    humidity = splitData[2]
+    
+    data["moisture"] = moisture
+    data["temperture"] = temperture
+    data["humidity"] = humidity
+    
     print (data)
     print ("------------ end -----------")
     return json.dumps(data)
@@ -77,6 +89,19 @@ def water_check(moistureLevel):
     expr = expr.format(command = 2, level = moistureLevel)
 
     sendData(expr)
+
+    recieve = recieveData()
+    print("check data ")
+    print (recieve)
     
-    return json.dumps({"status" : "OK"});
+    splitData = recieve.split()
+    moisture = splitData[0]
+    temperture = splitData[1]
+    humidity = splitData[2]
+    
+    data["moisture"] = moisture
+    data["temperture"] = temperture
+    data["humidity"] = humidity
+    
+    return json.dumps(data);
     

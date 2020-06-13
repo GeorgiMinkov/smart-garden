@@ -7,6 +7,8 @@ class GetDataPage extends Component {
         temperature: undefined,
         waterLevel: undefined,
         moisture: undefined,
+        moisterLevelForWater: undefined,
+        humidity: undefined,
         index: 0
     };
 
@@ -20,6 +22,8 @@ class GetDataPage extends Component {
                   temperature: response.data.temperature,
                   moisture: response.data.moisture,
                   waterLevel: response.data.waterLevel,
+                  moisterLevelForWater: response.data.moisterLevelForWater,
+                  humidity: response.data.humidity,
                   index: 1
                 });
               }
@@ -40,13 +44,24 @@ class GetDataPage extends Component {
                 </div>
 
                 <div className="element">
-                    <div>Moister</div>
-                    <div>{this.state.moisture} %</div>
+                    <div>Humidity</div>
+                    <div>{this.state.humidity} %</div>
                 </div>
 
                 <div className="element">
                     <div>Water Level</div>
                     <div>{this.state.waterLevel} %</div>
+                </div>
+
+                
+                <div className="element">
+                    <div>Current Moister level</div>
+                    <div>{this.state.moisture} %</div>
+                </div>
+
+                <div className="element">
+                    <div>Preset moisture level</div>
+                    <div>{this.state.moisterLevelForWater} %</div>
                 </div>
 
             </div>

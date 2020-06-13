@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 
 import GetDataPage from './GetDataPage/GetDataPage';
 import ChangeConfiguration from './Configuration/ChangeConfiguration';
+import History from './History/History';
 
 import {
   BrowserRouter as Router,
@@ -16,6 +17,7 @@ import {
   useParams,
   HashRouter
 } from "react-router-dom";
+import HistoryCustom from './History/HistoryCustom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,6 +43,10 @@ function App() {
           <Route path={"/configure"}>
             <ChangeConfiguration />
           </Route>
+
+          <Route path={"/history"}>
+            <History />
+          </Route>
         </Switch>
 
       </HashRouter >
@@ -61,6 +67,10 @@ let HomeElement = () => {
 
         <Button className="element" variant="outlined" color="secondary">
           <Link to="/configure">Change Configuration</Link>
+        </Button>
+
+        <Button className="element" variant="outlined" color="secondary">
+          <Link to="/history">History</Link>
         </Button>
       </div>
     </div>
