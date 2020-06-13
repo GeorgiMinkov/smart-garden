@@ -1,6 +1,8 @@
 package bg.unisofia.fmi.robotcourse.service;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import bg.unisofia.fmi.robotcourse.dto.Measure;
+import bg.unisofia.fmi.robotcourse.repository.JooqConfiguration;
+import bg.unisofia.fmi.robotcourse.repository.JooqHistory;
+import bg.unisofia.fmi.robotcourse.tables.pojos.Configuration;
+import bg.unisofia.fmi.robotcourse.tables.pojos.History;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -24,11 +30,19 @@ import lombok.extern.slf4j.Slf4j;
 public class DataDispatcher {
 	
 	private final RestTemplate restTemplate;
+	
+	private final JooqHistory historyRepository;
+	
+	private final JooqConfiguration configurationRepository;
+	
 
 	@Autowired
-	public DataDispatcher(RestTemplate restTemplate) {
+	public DataDispatcher(RestTemplate restTemplate, JooqHistory historyRepository,
+			JooqConfiguration configurationRepository) {
 		super();
 		this.restTemplate = restTemplate;
+		this.historyRepository = historyRepository;
+		this.configurationRepository = configurationRepository;
 	}
 	
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -63,6 +77,11 @@ public class DataDispatcher {
 	public ResponseEntity<Measure> configuration(@PathVariable String moisture) {
 		
 		log.info(">>>>>>>>>>>>TEST1111 " + moisture);
+		Configuration configuration = new Configuration();
+		configuration.setParamName("mositure-level");
+		configuration.setParamValue(moisture);
+		
+		configurationRepository.update(Optional.ofNullable(configuration));
 		
 		Measure test = new Measure();
 		test.setMoisture("40");
@@ -72,5 +91,11 @@ public class DataDispatcher {
 		return new ResponseEntity<Measure>(test, HttpStatus.OK);
 	}
 	
+	@CrossOrigin(origins = "http://localhost:3000")
+	@GetMapping("/history")
+	public ResponseEntity<List<History>> getHistory() {
+		List<History> history = historyRepository.getHistoryByRequestTime();
+		return new ResponseEntity<List<History>>(history, HttpStatus.OK);
+	}
 	
 }
