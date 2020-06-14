@@ -4,6 +4,7 @@ import { Slider, Box } from '@material-ui/core';
 
 import style from '../Configuration/style.css';
 
+
 const Form = (props) => (
     // <form onSubmit={props.sendData}>
     //     <div>
@@ -26,8 +27,8 @@ const Form = (props) => (
     //     <button >Get Weather</button>
     // </form>
     <div>
-        <div>Change water based on moisture</div>
-        <Box width="50%" height="50" position="center"><Slider className='slider'
+        <Box color="white" bgcolor="palevioletred" p={1}>Change water based on moisture</Box>
+        <Box width="60%" height="50" position="center"><Slider className='slider'
             defaultValue={30}
             aria-labelledby="discrete-slider"
             valueLabelDisplay="auto"
