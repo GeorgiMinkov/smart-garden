@@ -1,5 +1,6 @@
 package bg.unisofia.fmi.robotcourse.service;
 
+import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -28,13 +29,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController("/garden")
 public class DataDispatcher {
-	
+
 	private final RestTemplate restTemplate;
-	
+
 	private final JooqHistory historyRepository;
-	
+
 	private final JooqConfiguration configurationRepository;
-	
 
 	@Autowired
 	public DataDispatcher(RestTemplate restTemplate, JooqHistory historyRepository,
@@ -44,12 +44,12 @@ public class DataDispatcher {
 		this.historyRepository = historyRepository;
 		this.configurationRepository = configurationRepository;
 	}
-	
+
 	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/getData")
 	public ResponseEntity<Measure> getData() {
-		
-		log.info(">>>>>>>>>>>>TEST");
+
+		log.info(">>>>>>>>>>>>payload");
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -59,38 +59,44 @@ public class DataDispatcher {
 		String url = "http://localhost:5000/data";
 
 		System.out.println(url);
-		String response = restTemplate
-				.exchange(url, HttpMethod.GET, entity, String.class).getBody();
-		
+		String response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
+
 		JSONObject json = new JSONObject(response);
-		Measure test = new Measure();
-		test.setMoisture(json.getString("moisture"));
-		test.setTemperature("34");
-		test.setWaterLevel("44");
+		Measure payload = new Measure();
+		payload.setMoisture(json.getString("moisture"));
+		payload.setTemperature(json.getString("temperture"));
+		payload.setHumidity(json.getString("humidity"));
+		payload.setWaterLevel("44");
+		payload.setMoisterLevelForWater(configurationRepository.retrieveParamByName("moisture-level"));
+
+		History history = new History();
+		history.setPayload(payload.toString());
+		history.setRequestTime(new Timestamp(System.currentTimeMillis()).toString());
 		
-		return new ResponseEntity<Measure>(test, HttpStatus.OK);
+		historyRepository.create(Optional.ofNullable(history));
+
+		return new ResponseEntity<Measure>(payload, HttpStatus.OK);
 	}
 
-	
 	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/configuration/{moisture}")
-	public ResponseEntity<Measure> configuration(@PathVariable String moisture) {
-		
-		log.info(">>>>>>>>>>>>TEST1111 " + moisture);
+	public ResponseEntity<String> configuration(@PathVariable String moisture) {
+
+		log.info(">>>>>>>>>>>>payload1111 " + moisture);
 		Configuration configuration = new Configuration();
 		configuration.setParamName("mositure-level");
 		configuration.setParamValue(moisture);
-		
-		configurationRepository.update(Optional.ofNullable(configuration));
-		
-		Measure test = new Measure();
-		test.setMoisture("40");
-		test.setTemperature("34");
-		test.setWaterLevel("44");
-		
-		return new ResponseEntity<Measure>(test, HttpStatus.OK);
+
+		String value = configurationRepository.retrieveParamByName(configuration.getParamName());
+		if (value == null) {
+			configurationRepository.create(Optional.ofNullable(configuration));
+		} else {
+			configurationRepository.update(Optional.ofNullable(configuration));
+		}
+
+		return new ResponseEntity<String>("UPDATED", HttpStatus.OK);
 	}
-	
+
 	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/history")
 	public ResponseEntity<List<History>> getHistory() {
@@ -98,4 +104,51 @@ public class DataDispatcher {
 		return new ResponseEntity<List<History>>(history, HttpStatus.OK);
 	}
 	
+	@CrossOrigin(origins = "http://localhost:3000")
+	@GetMapping("/createHistory")
+	public ResponseEntity<String> createHistory() {
+		History test = new History();
+		test.setPayload("{payload}");
+		test.setRequestTime(new Timestamp(System.currentTimeMillis()).toString());
+		
+		historyRepository.create(Optional.ofNullable(test));
+	
+		
+		return new ResponseEntity<String>(test.toString(), HttpStatus.OK);
+	}
+
+	@CrossOrigin(origins = "http://localhost:3000")
+	@GetMapping("/triggerWaterService")
+	public ResponseEntity<Measure> triggerWaterService() {
+		// call pyhton endpoint
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+		String moistureLevel = configurationRepository.retrieveParamByName("mositure-level") == null ? "50"
+				: configurationRepository.retrieveParamByName("mositure-level");
+		HttpEntity<Object> entity = new HttpEntity<>(null, headers);
+
+		String url = "http://localhost:5000/waterCheck/" + moistureLevel;
+
+		System.out.println(url);
+		String response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
+
+		JSONObject json = new JSONObject(response);
+		Measure payload = new Measure();
+		payload.setMoisture(json.getString("moisture"));
+		payload.setTemperature(json.getString("temperture"));
+		payload.setHumidity(json.getString("humidity"));
+		payload.setWaterLevel("44");
+		payload.setMoisterLevelForWater(configurationRepository.retrieveParamByName("moisture-level"));
+		
+		History history = new History();
+		history.setPayload(payload.toString());
+		history.setRequestTime(new Timestamp(System.currentTimeMillis()).toString());
+
+		historyRepository.create(Optional.ofNullable(history));
+		
+		return new ResponseEntity<Measure>(payload, HttpStatus.OK);
+	}
 }
