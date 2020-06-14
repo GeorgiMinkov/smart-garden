@@ -13,10 +13,14 @@ import java.io.Serializable;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class History implements Serializable {
 
-    private static final long serialVersionUID = 163052353;
+    private static final long serialVersionUID = -1158965739;
 
     private Integer id;
     private String  requestTime;
+    private String  moisture;
+    private String  temperature;
+    private String  humidity;
+    private String  wateringStatus;
     private String  payload;
 
     public History() {}
@@ -24,16 +28,28 @@ public class History implements Serializable {
     public History(History value) {
         this.id = value.id;
         this.requestTime = value.requestTime;
+        this.moisture = value.moisture;
+        this.temperature = value.temperature;
+        this.humidity = value.humidity;
+        this.wateringStatus = value.wateringStatus;
         this.payload = value.payload;
     }
 
     public History(
         Integer id,
         String  requestTime,
+        String  moisture,
+        String  temperature,
+        String  humidity,
+        String  wateringStatus,
         String  payload
     ) {
         this.id = id;
         this.requestTime = requestTime;
+        this.moisture = moisture;
+        this.temperature = temperature;
+        this.humidity = humidity;
+        this.wateringStatus = wateringStatus;
         this.payload = payload;
     }
 
@@ -53,6 +69,38 @@ public class History implements Serializable {
         this.requestTime = requestTime;
     }
 
+    public String getMoisture() {
+        return this.moisture;
+    }
+
+    public void setMoisture(String moisture) {
+        this.moisture = moisture;
+    }
+
+    public String getTemperature() {
+        return this.temperature;
+    }
+
+    public void setTemperature(String temperature) {
+        this.temperature = temperature;
+    }
+
+    public String getHumidity() {
+        return this.humidity;
+    }
+
+    public void setHumidity(String humidity) {
+        this.humidity = humidity;
+    }
+
+    public String getWateringStatus() {
+        return this.wateringStatus;
+    }
+
+    public void setWateringStatus(String wateringStatus) {
+        this.wateringStatus = wateringStatus;
+    }
+
     public String getPayload() {
         return this.payload;
     }
@@ -67,6 +115,10 @@ public class History implements Serializable {
 
         sb.append(id);
         sb.append(", ").append(requestTime);
+        sb.append(", ").append(moisture);
+        sb.append(", ").append(temperature);
+        sb.append(", ").append(humidity);
+        sb.append(", ").append(wateringStatus);
         sb.append(", ").append(payload);
 
         sb.append(")");

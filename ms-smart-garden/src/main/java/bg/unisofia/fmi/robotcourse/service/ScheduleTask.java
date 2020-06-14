@@ -61,10 +61,16 @@ public class ScheduleTask {
 		payload.setTemperature(json.getString("temperture"));
 		payload.setHumidity(json.getString("humidity"));
 		payload.setWaterLevel("44");
+		payload.setMoisterLevelForWater(configurationRepository.retrieveParamByName("moisture-level"));
+		payload.setWateringStatus(json.getString("text"));
 		
 		History history = new History();
 		history.setPayload(payload.toString());
 		history.setRequestTime(new Timestamp(System.currentTimeMillis()).toString());
+		history.setHumidity(payload.getHumidity());
+		history.setMoisture(payload.getMoisture());
+		history.setTemperature(payload.getTemperature());
+		history.setWateringStatus(payload.getWateringStatus());
 
 		historyRepository.create(Optional.ofNullable(history));
 	}

@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import GetDataPage from './GetDataPage/GetDataPage';
 import ChangeConfiguration from './Configuration/ChangeConfiguration';
 import History from './History/History';
+import TriggerWaterCheck from './TriggerWaterCheck/TriggerWaterCheck';
 
 import {
   BrowserRouter as Router,
@@ -47,6 +48,10 @@ function App() {
           <Route path={"/history"}>
             <History />
           </Route>
+
+          <Route path={"/triggerWaterCheck"}>
+            <TriggerWaterCheck />
+          </Route>
         </Switch>
 
       </HashRouter >
@@ -71,6 +76,10 @@ let HomeElement = () => {
 
         <Button className="element" variant="outlined" color="secondary">
           <Link to="/history">History</Link>
+        </Button>
+
+        <Button className="element" variant="outlined" color="secondary">
+          <Link to="/triggerWaterCheck">Trigger Water Check</Link>
         </Button>
       </div>
     </div>

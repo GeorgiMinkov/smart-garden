@@ -16,7 +16,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row3;
+import org.jooq.Row7;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -32,7 +32,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class History extends TableImpl<HistoryRecord> {
 
-    private static final long serialVersionUID = -1544370241;
+    private static final long serialVersionUID = -953830840;
 
     /**
      * The reference instance of <code>weather-dispatcher.HISTORY</code>
@@ -58,9 +58,29 @@ public class History extends TableImpl<HistoryRecord> {
     public final TableField<HistoryRecord, String> REQUEST_TIME = createField(DSL.name("REQUEST_TIME"), org.jooq.impl.SQLDataType.VARCHAR(256).nullable(false), this, "");
 
     /**
+     * The column <code>weather-dispatcher.HISTORY.MOISTURE</code>.
+     */
+    public final TableField<HistoryRecord, String> MOISTURE = createField(DSL.name("MOISTURE"), org.jooq.impl.SQLDataType.VARCHAR(10), this, "");
+
+    /**
+     * The column <code>weather-dispatcher.HISTORY.TEMPERATURE</code>.
+     */
+    public final TableField<HistoryRecord, String> TEMPERATURE = createField(DSL.name("TEMPERATURE"), org.jooq.impl.SQLDataType.VARCHAR(10), this, "");
+
+    /**
+     * The column <code>weather-dispatcher.HISTORY.HUMIDITY</code>.
+     */
+    public final TableField<HistoryRecord, String> HUMIDITY = createField(DSL.name("HUMIDITY"), org.jooq.impl.SQLDataType.VARCHAR(10), this, "");
+
+    /**
+     * The column <code>weather-dispatcher.HISTORY.WATERING_STATUS</code>.
+     */
+    public final TableField<HistoryRecord, String> WATERING_STATUS = createField(DSL.name("WATERING_STATUS"), org.jooq.impl.SQLDataType.VARCHAR(256), this, "");
+
+    /**
      * The column <code>weather-dispatcher.HISTORY.PAYLOAD</code>.
      */
-    public final TableField<HistoryRecord, String> PAYLOAD = createField(DSL.name("PAYLOAD"), org.jooq.impl.SQLDataType.VARCHAR(256).nullable(false), this, "");
+    public final TableField<HistoryRecord, String> PAYLOAD = createField(DSL.name("PAYLOAD"), org.jooq.impl.SQLDataType.VARCHAR(1024).nullable(false), this, "");
 
     /**
      * Create a <code>weather-dispatcher.HISTORY</code> table reference
@@ -142,11 +162,11 @@ public class History extends TableImpl<HistoryRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row3 type methods
+    // Row7 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row3<Integer, String, String> fieldsRow() {
-        return (Row3) super.fieldsRow();
+    public Row7<Integer, String, String, String, String, String, String> fieldsRow() {
+        return (Row7) super.fieldsRow();
     }
 }

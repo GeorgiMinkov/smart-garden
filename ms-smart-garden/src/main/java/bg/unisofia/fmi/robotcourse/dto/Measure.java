@@ -10,4 +10,5 @@ public class Measure {
 	private String waterLevel;
 	private String humidity;
 	private String moisterLevelForWater;
+	private String wateringStatus;
 }

@@ -1,0 +1,9 @@
+.wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+.water-text {
+    font-size: 15px;
+}
