@@ -18,7 +18,7 @@ import time
 
 
 print("Initialize")
-arduinoSerial = serial.Serial('/dev/ttyACM1', 9600)
+arduinoSerial = serial.Serial('/dev/ttyACM0', 9600)
 
 time.sleep(5)
 
@@ -71,6 +71,8 @@ def get_data():
     print (recieve)
     
     splitData = recieve.split()
+    print("check data ")
+    print (recieve)
     moisture = splitData[0]
     temperture = splitData[1]
     humidity = splitData[2]
@@ -85,20 +87,30 @@ def get_data():
 
 @api.route('/waterCheck/<int:moistureLevel>', methods=['GET']) # water check for moisture level
 def water_check(moistureLevel):
+    data = {
+        "text": "undefined",
+        "moisture": "0.0",
+        "temperture": "0.0",
+        "humidity": "0.0",
+        "waterLevel": "45"}
+    
     expr = "{command} {level}"
     expr = expr.format(command = 2, level = moistureLevel)
-
+    
+    
     sendData(expr)
 
     recieve = recieveData()
     print("check data ")
     print (recieve)
     
-    splitData = recieve.split()
-    moisture = splitData[0]
-    temperture = splitData[1]
-    humidity = splitData[2]
+    splitData = recieve.split("|")
+    text = splitData[0]
+    moisture = splitData[1]
+    temperture = splitData[2]
+    humidity = splitData[3]
     
+    data["text"] = text
     data["moisture"] = moisture
     data["temperture"] = temperture
     data["humidity"] = humidity
