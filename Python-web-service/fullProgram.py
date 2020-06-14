@@ -60,6 +60,7 @@ def recieveData():
 def get_data():
     print ("------------ start -----------")
     data = {
+        "text": "water info",
         "moisture": "0.0",
         "temperture": "0.0",
         "humidity": "0.0",
